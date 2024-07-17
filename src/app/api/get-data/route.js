@@ -1,5 +1,5 @@
 // src/app/api/get-data/route.js
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { Redis } from "@upstash/redis";
 
 const redis = new Redis({
@@ -8,7 +8,8 @@ const redis = new Redis({
 });
 
 export async function GET(request) {
-  const myKey = "myKey"; // Ganti dengan nama kunci yang sesuai di Upstash Redis
+  // const myKey = "myKey";
+  const myKey = 'myKey'
 
   try {
     // Tes koneksi Redis
@@ -16,10 +17,21 @@ export async function GET(request) {
     console.log("Koneksi Redis berhasil:", pong);
 
     // Mendapatkan data berdasarkan myKey
+    const inpUsername = 'andriraymonds'
     const data = await redis.get(myKey);
+    const username = await redis.get('username')
+    const password = await redis.get('password')
 
     if (data !== null) {
-      return NextResponse.json({ message: "Data ditemukan", data });
+      let value = ''
+      if (inpUsername == username){
+        value = 'true'
+      }else {
+        value = 'false'
+      }
+      console.log('fuck')
+      // return NextResponse.json({ message: "Success", data, username, password, value});
+      return NextResponse.json({ message: "success" , username, password, value});
     } else {
       return NextResponse.json(
         { message: "Data tidak ditemukan" },
